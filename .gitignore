@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+server/node_modules/
+client/node_modules/
+
+# Build
+client/dist/
+dist/
+
+# Env
+.env
+server/.env
+*.local
+
+# Logs / OS
+*.log
+.DS_Store
+__pycache__/
+*.pyc
+
+# Legacy Python / SQLite (if present)
+attendance.db
+venv/
+.venv/
+
+# Editor
+.idea/
+.vscode/
