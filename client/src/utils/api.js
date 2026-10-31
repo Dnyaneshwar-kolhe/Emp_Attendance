@@ -1,3 +1,5 @@
+const BASE_URL = import.meta.env.VITE_API_URL || '';
+
 export async function apiFetch(url, options = {}) {
   const token = localStorage.getItem('jwt_token');
   const headers = {
@@ -9,7 +11,7 @@ export async function apiFetch(url, options = {}) {
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const response = await fetch(url, {
+  const response = await fetch(`${BASE_URL}${url}`, {
     ...options,
     headers
   });
