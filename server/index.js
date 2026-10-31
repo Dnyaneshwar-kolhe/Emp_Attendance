@@ -26,6 +26,10 @@ app.use(
       if (origin.endsWith('.onrender.com')) {
         return callback(null, true);
       }
+      // Allow all Vercel-hosted subdomains
+      if (origin.endsWith('.vercel.app')) {
+        return callback(null, true);
+      }
       // Allow explicitly set CLIENT_URL
       if (process.env.CLIENT_URL && origin === process.env.CLIENT_URL) {
         return callback(null, true);
