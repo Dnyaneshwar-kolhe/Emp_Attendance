@@ -16,13 +16,20 @@ const app = express();
 app.use(
   cors({
     origin: function (origin, callback) {
-      const allowed = [
-        'http://localhost:5173',
-        'http://127.0.0.1:5173',
-        process.env.CLIENT_URL
-      ].filter(Boolean);
-      // Allow requests with no origin (mobile apps, curl, etc.)
-      if (!origin || allowed.includes(origin)) return callback(null, true);
+      // Allow requests with no origin (curl, mobile apps, same-origin)
+      if (!origin) return callback(null, true);
+      // Allow localhost for local dev
+      if (origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) {
+        return callback(null, true);
+      }
+      // Allow all Render-hosted subdomains
+      if (origin.endsWith('.onrender.com')) {
+        return callback(null, true);
+      }
+      // Allow explicitly set CLIENT_URL
+      if (process.env.CLIENT_URL && origin === process.env.CLIENT_URL) {
+        return callback(null, true);
+      }
       callback(new Error('Not allowed by CORS'));
     },
     credentials: true
