@@ -16,14 +16,25 @@ const router = express.Router();
 
 function nowParts() {
   const now = new Date();
+  // Convert to IST (UTC+5:30) for date/time strings
+  const IST_OFFSET_MS = 5.5 * 60 * 60 * 1000;
+  const istNow = new Date(now.getTime() + IST_OFFSET_MS);
   const pad = (n) => String(n).padStart(2, '0');
-  const todayStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
-  const nowStr = `${todayStr} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+  const todayStr = `${istNow.getUTCFullYear()}-${pad(istNow.getUTCMonth() + 1)}-${pad(istNow.getUTCDate())}`;
+  const timeStr = `${pad(istNow.getUTCHours())}:${pad(istNow.getUTCMinutes())}:${pad(istNow.getUTCSeconds())}`;
+  const nowStr = `${todayStr} ${timeStr}`;
   return { now, todayStr, nowStr };
 }
 
 function formatTime12(date) {
-  return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+  // Convert UTC date to IST for display
+  const IST_OFFSET_MS = 5.5 * 60 * 60 * 1000;
+  const istDate = new Date(date.getTime() + IST_OFFSET_MS);
+  const h = istDate.getUTCHours();
+  const m = String(istDate.getUTCMinutes()).padStart(2, '0');
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const h12 = h % 12 || 12;
+  return `${String(h12).padStart(2, '0')}:${m} ${ampm}`;
 }
 
 router.get('/dashboard-summary', jwtRequired('employee'), async (req, res) => {

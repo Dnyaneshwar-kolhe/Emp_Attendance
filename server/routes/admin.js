@@ -12,11 +12,12 @@ const {
 } = require('../middleware/auth');
 
 const router = express.Router();
-
+s
 function todayStr() {
-  const now = new Date();
+  const IST_OFFSET_MS = 5.5 * 60 * 60 * 1000;
+  const istNow = new Date(Date.now() + IST_OFFSET_MS);
   const pad = (n) => String(n).padStart(2, '0');
-  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+  return `${istNow.getUTCFullYear()}-${pad(istNow.getUTCMonth() + 1)}-${pad(istNow.getUTCDate())}`;
 }
 
 router.get('/dashboard-stats', jwtRequired('admin'), async (req, res) => {
